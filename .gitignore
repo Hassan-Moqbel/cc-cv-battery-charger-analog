@@ -1,0 +1,7 @@
+# OS metadata and cache
+Thumbs.db
+ehthumbs.db
+.DS_Store
+
+# Office temporary files
+~$*
