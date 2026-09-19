@@ -22,57 +22,57 @@ Safely restoring energy to secondary battery cells (such as Lithium-Ion or Seale
 
 ## System Architecture Diagram
 
-```mermaid
+mermaid
 flowchart LR
-    DC[DC Power Source] --> CC[Current Limiting Stage \nCC Mode]
-    CC -->|I_charge| CV[Voltage Clamping Stage \nCV Mode]
-    CV -->|V_cv| DIODE[Reverse Polarity & \nBack-feed Blocking Diode]
-    DIODE --> BATT[Battery Terminals]
-```
+    DC["DC Power Source"] --> CC["Current Limiting Stage \nCC Mode"]
+    CC -->|I_charge| CV["Voltage Clamping Stage \nCV Mode"]
+    CV -->|V_cv| DIODE["Reverse Polarity & \nBack-feed Blocking Diode"]
+    DIODE --> BATT["Battery Terminals"]
+
 
 ## Theoretical & Mathematical Models
 
 ### 1. Constant Current Phase Regulation (Bulk Charging)
 During the CC phase, the battery's voltage is low. The current regulator dominates the circuit, forcing a constant bulk current defined by a reference voltage and a precision sense resistor:
-$$I_{charge} = \frac{V_{ref}}{R_{sense}}$$
+$$I_{"charge"} = \frac{"V_{ref"}}{R_{"sense"}}$$
 
 ### 2. Constant Voltage Clamping Regulation (Absorption/Float)
 As the battery charges, its terminal voltage rises. Once it hits the target voltage, the secondary regulator takes over to clamp the voltage, defined by its resistor divider network:
-$$V_{cv} = V_{ref} \left(1 + \frac{R_2}{R_1}\right)$$
+$$V_{"cv"} = V_{"ref"} \left(1 + \frac{"R_2"}{R_1}\right)$$
 
 ### 3. Autonomous Transition Boundary Condition
 The exact moment the circuit switches from the Bulk (CC) phase to the Absorption (CV) phase occurs when the battery's terminal voltage matches the clamped voltage threshold:
-$$\text{Mode Switch at } V_{cell}(t) = V_{cv} \implies I_{charge} \text{ begins exponential decay}$$
+$$\text{"Mode Switch at "} V_{"cell"}(t) = V_{"cv"} \implies I_{"charge"} \text{" begins exponential decay"}$$
 
 ### 4. Exponential Current Decay (CV Stage)
 During the CV stage, the battery voltage is held constant while its internal charge approaches $100\%$. The current tapers off exponentially:
-$$i_b(t) = I_{charge} \cdot e^{-\frac{t - t_0}{\tau}}$$
-*(Charging is typically terminated or switched to a trickle float when $I_{cutoff} \approx 0.1 \times I_{charge}$).*
+$$i_b(t) = I_{"charge"} \cdot e^{-\frac{"t - t_0"}{\tau}}$$
+*(Charging is typically terminated or switched to a trickle float when $I_{"cutoff"} \approx 0.1 \times I_{"charge"}$).*
 
 ### 5. Linear Pass Element Thermal Dissipation
 Because this relies on analog linear regulators, the maximum heat is generated when the battery is completely dead, producing the highest voltage drop across the regulator:
-$$P_{D(max)} = (V_{in} - V_{batt,min}) \cdot I_{charge}$$
-*(Heatsinks must be sized to continuously dissipate $P_{D(max)}$ to prevent thermal shutdown).*
+$$P_{"D(max)"} = (V_{"in"} - V_{"batt,min"}) \cdot I_{"charge"}$$
+*(Heatsinks must be sized to continuously dissipate $P_{"D(max)"}$ to prevent thermal shutdown).*
 
 ## Hardware Bill of Materials (BOM)
 | Component | Function |
 | :--- | :--- |
 | **Voltage/Current Regulators** | e.g., LM317T or LM338K for analog linear power regulation |
-| **Current Sense Resistors** | High-wattage wirewound/ceramic resistors ($R_{sense}$) |
-| **Shunt Potentiometers** | Precision multi-turn trimpots to set $V_{cv}$ thresholds |
+| **Current Sense Resistors** | High-wattage wirewound/ceramic resistors ($R_{"sense"}$) |
+| **Shunt Potentiometers** | Precision multi-turn trimpots to set $V_{"cv"}$ thresholds |
 | **Power Rectifier Diodes** | High-current blocking diode (e.g., 1N5408 or Schottky for low $V_f$) |
 | **Heat Sinks** | TO-220/TO-3 aluminum extrusion heatsinks for thermal stability |
 
 ## Calibration & Multi-stage Tuning Guide
-1. **Setting the Output Voltage ($V_{cv}$)**: Disconnect the battery. Measure the output terminals with a multimeter. Adjust the voltage tuning potentiometer until the output exactly matches the battery manufacturer's specified charge voltage (e.g., $14.4\text{V}$ for SLA or $4.2\text{V}$ for a single Li-ion cell), adding $+0.7\text{V}$ to compensate for the blocking diode drop.
-2. **Setting the Current Limit ($I_{charge}$)**: Place a high-current ammeter directly across the output terminals (creating a short circuit). The CC stage will prevent failure. Adjust the current-sense resistor (or trimpot) until the meter reads the desired bulk charging current (e.g., $0.5\text{C}$ or $1.0\text{C}$ of battery capacity).
+1. **Setting the Output Voltage ($V_{"cv"}$)**: Disconnect the battery. Measure the output terminals with a multimeter. Adjust the voltage tuning potentiometer until the output exactly matches the battery manufacturer's specified charge voltage (e.g., $14.4\text{"V"}$ for SLA or $4.2\text{"V"}$ for a single Li-ion cell), adding $+0.7\text{"V"}$ to compensate for the blocking diode drop.
+2. **Setting the Current Limit ($I_{"charge"}$)**: Place a high-current ammeter directly across the output terminals (creating a short circuit). The CC stage will prevent failure. Adjust the current-sense resistor (or trimpot) until the meter reads the desired bulk charging current (e.g., $0.5\text{"C"}$ or $1.0\text{"C"}$ of battery capacity).
 
 ## Authentic Artifacts Catalog
 - **Engineering Report**: [`docs/CC and CV battery charging_حسن مقبل.pdf`](docs/)
-- **Original Schematics & Physical Hardware**: Located in [`docs/images/`](docs/images/) as **[ORIGINAL SCHEMATIC & PROTOTYPE ARTIFACTS]**.
+- **Original Schematics & Physical Hardware**: Located in ["`docs/images/`"](docs/images/) as **[ORIGINAL SCHEMATIC & PROTOTYPE ARTIFACTS]**.
 
 ## Engineering Audit & Tradeoffs
-- **Linear Analog Regulation vs. Switch-Mode (Buck) Charging**: This analog CC/CV topology is exceptionally simple, inexpensive, and introduces zero Electromagnetic Interference (EMI) to nearby RF/Audio circuits. However, it is highly thermally inefficient. Dropping $24\text{V}_{in}$ down to charge a $12\text{V}$ battery at $2\text{A}$ burns $24\text{Watts}$ of pure heat. In contrast, a modern Switch-Mode Power Supply (SMPS) buck converter chip (like the XL4015) can perform the exact same CC/CV profile at $>90\%$ efficiency without massive heatsinks, at the cost of high-frequency inductor noise.
+- **Linear Analog Regulation vs. Switch-Mode (Buck) Charging**: This analog CC/CV topology is exceptionally simple, inexpensive, and introduces zero Electromagnetic Interference (EMI) to nearby RF/Audio circuits. However, it is highly thermally inefficient. Dropping $24\text{"V"}_{"in"}$ down to charge a $12\text{"V"}$ battery at $2\text{"A"}$ burns $24\text{"Watts"}$ of pure heat. In contrast, a modern Switch-Mode Power Supply (SMPS) buck converter chip (like the XL4015) can perform the exact same CC/CV profile at $>90\%$ efficiency without massive heatsinks, at the cost of high-frequency inductor noise.
 
 ---
 
@@ -81,4 +81,4 @@ Mechatronics Engineer | Mechanical Design & CAD (SolidWorks & AutoCAD) | Prevent
 [GitHub](https://github.com/Hassan-Moqbel) · [Facebook](https://www.facebook.com/share/1BqxAgVjHi/) · [LinkedIn](https://www.linkedin.com/in/hassan-moqbel)
 
 ## License
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the ["MIT License"](LICENSE).
