@@ -33,16 +33,28 @@ flowchart LR
 ## Theoretical & Mathematical Models
 
 ### 1. Constant Current Phase Regulation (Bulk Charging)
+
 During the CC phase, the battery's voltage is low. The current regulator dominates the circuit, forcing a constant bulk current defined by a reference voltage and a precision sense resistor:
-$$I_{charge} = \frac{V_{ref}}{R_{sense}}$$
+
+$$
+I_{\text{charge}} = \frac{V_{\text{ref}}}{R_{\text{sense}}}
+$$
 
 ### 2. Constant Voltage Clamping Regulation (Absorption/Float)
+
 As the battery charges, its terminal voltage rises. Once it hits the target voltage, the secondary regulator takes over to clamp the voltage, defined by its resistor divider network:
-$$V_{cv} = V_{ref} \left(1 + \frac{R_2}{R_1}\right)$$
+
+$$
+V_{\text{cv}} = V_{\text{ref}} \left( 1 + \frac{R_2}{R_1} \right)
+$$
 
 ### 3. Autonomous Transition Boundary Condition
+
 The exact moment the circuit switches from the Bulk (CC) phase to the Absorption (CV) phase occurs when the battery's terminal voltage matches the clamped voltage threshold:
-$$\text{Mode Switch at } V_{cell}(t) = V_{cv} \implies I_{charge} \text{ begins exponential decay}$$
+
+$$
+V_{\text{cell}}(t) = V_{\text{cv}} \implies I_{\text{charge}}(t) \text{ begins exponential decay}
+$$
 
 ### 4. Exponential Current Decay (CV Stage)
 During the CV stage, the battery voltage is held constant while its internal charge approaches $100\%$. The current tapers off exponentially:
@@ -64,11 +76,11 @@ $$P_{D(max)} = (V_{in} - V_{batt,min}) \cdot I_{charge}$$
 | **Heat Sinks** | TO-220/TO-3 aluminum extrusion heatsinks for thermal stability |
 
 ## Calibration & Multi-stage Tuning Guide
-1. **Setting the Output Voltage ($V_{cv}$)**: Disconnect the battery. Measure the output terminals with a multimeter. Adjust the voltage tuning potentiometer until the output exactly matches the battery manufacturer's specified charge voltage (e.g.,$14.4\text{V}$for SLA or$4.2\text{V}$for a single Li-ion cell), adding$+0.7\text{V}$ to compensate for the blocking diode drop.
-2. **Setting the Current Limit ($I_{charge}$)**: Place a high-current ammeter directly across the output terminals (creating a short circuit). The CC stage will prevent failure. Adjust the current-sense resistor (or trimpot) until the meter reads the desired bulk charging current (e.g.,$0.5\text{C}$or$1.0\text{C}$ of battery capacity).
+1. **Setting the Output Voltage ($V_{cv}$)**: Disconnect the battery. Measure the output terminals with a multimeter. Adjust the voltage tuning potentiometer until the output exactly matches the battery manufacturer's specified charge voltage (e.g., $14.4\text{ V}$ for SLA or $4.2\text{ V}$ for a single Li-ion cell), adding $+0.7\text{ V}$ to compensate for the blocking diode drop.
+2. **Setting the Current Limit ($I_{charge}$)**: Place a high-current ammeter directly across the output terminals (creating a short circuit). The CC stage will prevent failure. Adjust the current-sense resistor (or trimpot) until the meter reads the desired bulk charging current (e.g., $0.5\text{ C}$ or $1.0\text{ C}$ of battery capacity).
 
 ## Authentic Artifacts Catalog
-- **Engineering Report**: [`docs/CC and CV battery charging_حسن مقبل.pdf`](docs/)
+- **Engineering Report**: [`docs/CC_CV_Battery_Charger_Engineering_Report.pdf`](docs/)
 - **Original Schematics & Physical Hardware**: Located in [`docs/images/`](docs/images/) as **[ORIGINAL SCHEMATIC & PROTOTYPE ARTIFACTS]**.
 
 ## Engineering Audit & Tradeoffs
