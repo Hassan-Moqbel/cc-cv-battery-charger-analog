@@ -95,7 +95,7 @@ $$
 - **Original Schematics & Physical Hardware**: Located in [`docs/images/`](docs/images/) as **[ORIGINAL SCHEMATIC & PROTOTYPE ARTIFACTS]**.
 
 ## Engineering Audit & Tradeoffs
-- **Linear Analog Regulation vs. Switch-Mode (Buck) Charging**: This analog CC/CV topology is exceptionally simple, inexpensive, and introduces zero Electromagnetic Interference (EMI) to nearby RF/Audio circuits. However, it is highly thermally inefficient. Dropping $24\text{V}_{in}$down to charge a$12\text{V}$battery at$2\text{A}$burns$24\text{Watts}$of pure heat. In contrast, a modern Switch-Mode Power Supply (SMPS) buck converter chip (like the XL4015) can perform the exact same CC/CV profile at$>90\%$ efficiency without massive heatsinks, at the cost of high-frequency inductor noise.
+- **Linear Analog Regulation vs. Switch-Mode (Buck) Charging**: This analog CC/CV topology is exceptionally simple, inexpensive, and introduces zero Electromagnetic Interference (EMI) to nearby RF/Audio circuits. However, it is highly thermally inefficient. Dropping $V_{	ext{in}} = 24	ext{ V}$ down to charge a 12 V battery at 2 A burns 24 W of pure heat. In contrast, a modern Switch-Mode Power Supply (SMPS) buck converter chip (like the XL4015) can perform the exact same CC/CV profile at > 90% efficiency without massive heatsinks, at the cost of high-frequency inductor noise.
 
 ---
 
