@@ -57,14 +57,25 @@ V_{\text{cell}}(t) = V_{\text{cv}} \implies I_{\text{charge}}(t) \text{ begins e
 $$
 
 ### 4. Exponential Current Decay (CV Stage)
-During the CV stage, the battery voltage is held constant while its internal charge approaches $100\%$. The current tapers off exponentially:
-$$i_b(t) = I_{charge} \cdot e^{-\frac{t - t_0}{\tau}}$$
-*(Charging is typically terminated or switched to a trickle float when $I_{cutoff} \approx 0.1 \times I_{charge}$).*
+
+During the CV stage, the battery voltage is held constant while its state of charge approaches 100%. The current tapers off exponentially:
+
+$$
+i_b(t) = I_{\text{charge}} \cdot e^{-\frac{t - t_0}{\tau}}
+$$
+
+**Note:** Charging is typically terminated or switched to a trickle float when $I_{\text{cutoff}} \approx 0.1 \times I_{\text{charge}}$.
 
 ### 5. Linear Pass Element Thermal Dissipation
-Because this relies on analog linear regulators, the maximum heat is generated when the battery is completely dead, producing the highest voltage drop across the regulator:
-$$P_{D(max)} = (V_{in} - V_{batt,min}) \cdot I_{charge}$$
-*(Heatsinks must be sized to continuously dissipate $P_{D(max)}$ to prevent thermal shutdown).*
+
+Because this relies on analog linear regulators, the maximum heat is generated when the battery is completely discharged, producing the highest voltage drop across the regulator:
+
+$$
+P_{D(\max)} = (V_{\text{in}} - V_{\text{batt},\min}) \cdot I_{\text{charge}}
+$$
+
+**Thermal Constraint:** Heatsinks must be sized to continuously dissipate $P_{D(\max)}$ to prevent thermal shutdown.
+
 
 ## Hardware Bill of Materials (BOM)
 | Component | Function |
